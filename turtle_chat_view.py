@@ -40,7 +40,8 @@ from turtle_chat_widgets import Button, TextInput
 #   \r to your string.  Test it out at the Python shell for practice
 #####################################################################################
 class TextBox(TextInput):
-    def draw_box(self, pos=None, width=None, height=None):
+    def draw_box(self, pos=0, width=200, height=100):
+        self.writer.hideturtle()
         self.writer.up()
         self.writer.goto(pos, pos)
         self.writer.down()
@@ -71,7 +72,11 @@ class TextBox(TextInput):
 #      you send messages and update message displays.
 #####################################################################################
 class SendButton(Button):
-    def fun(self):
+    def __init__(self, view, my_turtle=None,shape=None,pos=(0,0)):
+        super(SendButton, self).__init__()    
+    def fun(self, x, y):
+        self.server.send(msg.encode())
+        
         
 #####################################################################################
 
@@ -85,7 +90,7 @@ class SendButton(Button):
 #Read the comments below for hints and directions.
 ##################################################################
 ##################################################################
-class View:
+class View():
     _MSG_LOG_LENGTH=5 #Number of messages to retain in view
     _SCREEN_WIDTH=300
     _SCREEN_HEIGHT=600
@@ -99,9 +104,10 @@ class View:
         ###
         #Store the username and partner_name into the instance.
         ###
-
+        self.username=username
+        self.partner_name=partner_name
         #Make a new client object and store it in this instance.
-
+        my_client=Client()
         #Set screen dimensions using turtle.setup
         #You can get help on this function, as with other turtle functions,
         #by typing
@@ -110,30 +116,38 @@ class View:
         #   help(turtle.setup)
         #
         #at the Python shell.
-
+        turtle.setup(width=500, height=800, startx=0, starty=0)
         #This list will store all of the messages.
         #You can add strings to the front of the list using
         #   self.msg_queue.insert(0,a_msg_string)
         #or at the end of the list using
         #   self.msg_queue.append(a_msg_string)
         self.msg_queue=[]
+        self.msg_queue.insert(0, "Music")
+        self.msg_queue.insert(0, "Is Awesome")
 
         ###
         #Create one turtle object for each message to display.
         #You can use the clear() and write() methods to erase
         #and write messages for each
         ###
-
+        user=turtle.clone()
+        partner=turtle.clone()
+        user.write(self.msg_queue[1])
+        partner.write(self.msg_queue[0])
         ###
         #Create a TextBox instance and a SendButton instance and
         #Store them inside of this instance
         ###
-
+        TheBox=TextBox()
+        TheButton=SendButton(1000)
+        self=TheBox
+        self=TheButton
         ###
         #Call your setup_listeners() function, if you have one,
         #and any other remaining setup functions you have invented.
         ###
-
+        
     def send_msg(self):
         '''
         You should implement this method.  It should call the
@@ -161,7 +175,6 @@ class View:
         Then, it can call turtle.listen()
         '''
         pass
-
     def msg_received(self,msg):
         '''
         This method is called when a new message is received.
